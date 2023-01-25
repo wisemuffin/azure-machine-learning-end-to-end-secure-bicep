@@ -1,3 +1,8 @@
+# create-secure-workspace-template
+
+[msft tutorial-create-secure-workspace-template](https://learn.microsoft.com/en-us/azure/machine-learning/tutorial-create-secure-workspace-template?tabs=bicep%2Ccli)
+[repo based on](https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.machinelearningservices/machine-learning-end-to-end-secure)
+
 # Changes made to secure workspace bicep
 - removed bastion
 - removed aks
