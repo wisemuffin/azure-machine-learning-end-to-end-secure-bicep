@@ -53,8 +53,8 @@ param amlComputePublicIp bool = true
 
 @description('VM size for the default compute cluster')
 param vmSizeParam string
- 
-resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-05-01' = {
+
+resource machineLearning 'Microsoft.MachineLearningServices/workspaces@2022-10-01' = {
   name: machineLearningName
   location: location
   tags: tags
@@ -97,7 +97,7 @@ module machineLearningCompute 'machinelearningcompute.bicep' = {
   params: {
     machineLearning: machineLearningName
     location: location
-    computeSubnetId:computeSubnetId
+    computeSubnetId: computeSubnetId
     aksName: mlAksName
     aksSubnetId: aksSubnetId
     prefix: prefix

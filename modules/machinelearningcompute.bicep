@@ -27,7 +27,7 @@ param amlComputePublicIp bool
 @description('VM size for the default compute cluster')
 param vmSizeParam string
 
-resource machineLearningCluster001 'Microsoft.MachineLearningServices/workspaces/computes@2022-05-01' = {
+resource machineLearningCluster001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = {
   name: '${machineLearning}/cluster001'
   location: location
   tags: tags
@@ -48,7 +48,7 @@ resource machineLearningCluster001 'Microsoft.MachineLearningServices/workspaces
       remoteLoginPortPublicAccess: 'Disabled'
       scaleSettings: {
         minNodeCount: 0
-        maxNodeCount: 5
+        maxNodeCount: 2
         nodeIdleTimeBeforeScaleDown: 'PT120S'
       }
       subnet: {
@@ -58,7 +58,7 @@ resource machineLearningCluster001 'Microsoft.MachineLearningServices/workspaces
   }
 }
 
-resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/workspaces/computes@2022-05-01' = {
+resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/workspaces/computes@2022-10-01' = {
   name: '${machineLearning}/${prefix}-ci001'
   location: location
   tags: tags
@@ -72,7 +72,7 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
     disableLocalAuth: true
     properties: {
       applicationSharingPolicy: 'Personal'
-      
+
       computeInstanceAuthorizationType: 'personal'
       sshSettings: {
         sshPublicAccess: 'Disabled'
@@ -85,16 +85,16 @@ resource machineLearningComputeInstance001 'Microsoft.MachineLearningServices/wo
   }
 }
 
-module machineLearningAksCompute 'privateaks.bicep' = {
-  name: aksName
-  scope: resourceGroup()
-  params: {
-    location: location
-    tags: tags
-    aksClusterName: aksName
-    computeName: aksName
-    aksSubnetId: aksSubnetId
-    workspaceName: machineLearning
-    vmSizeParam: vmSizeParam
-  }
-}
+// module machineLearningAksCompute 'privateaks.bicep' = {
+//   name: aksName
+//   scope: resourceGroup()
+//   params: {
+//     location: location
+//     tags: tags
+//     aksClusterName: aksName
+//     computeName: aksName
+//     aksSubnetId: aksSubnetId
+//     workspaceName: machineLearning
+//     vmSizeParam: vmSizeParam
+//   }
+// }

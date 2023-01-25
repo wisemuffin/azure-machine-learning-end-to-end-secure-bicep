@@ -21,25 +21,25 @@ param trainingSubnetPrefix string = '192.168.0.0/24'
 @description('Scoring subnet address prefix')
 param scoringSubnetPrefix string = '192.168.1.0/24'
 
-@description('Bastion subnet address prefix')
-param azureBastionSubnetPrefix string = '192.168.250.0/27'
+// @description('Bastion subnet address prefix')
+// param azureBastionSubnetPrefix string = '192.168.250.0/27'
 
-@description('Deploy a Bastion jumphost to access the network-isolated environment?')
-param deployJumphost bool = true
+// @description('Deploy a Bastion jumphost to access the network-isolated environment?')
+// param deployJumphost bool = true
 
-@description('Jumphost virtual machine username')
-param dsvmJumpboxUsername string
+// @description('Jumphost virtual machine username')
+// param dsvmJumpboxUsername string
 
-@secure()
-@minLength(8)
-@description('Jumphost virtual machine password')
-param dsvmJumpboxPassword string
+// @secure()
+// @minLength(8)
+// @description('Jumphost virtual machine password')
+// param dsvmJumpboxPassword string
 
 @description('Enable public IP for Azure Machine Learning compute nodes')
 param amlComputePublicIp bool = true
 
 @description('VM size for the default compute cluster')
-param amlComputeDefaultVmSize string = 'Standard_DS3_v2'
+param amlComputeDefaultVmSize string = 'Standard_DS2_v2'
 
 // Variables
 var name = toLower('${prefix}')
@@ -48,16 +48,16 @@ var name = toLower('${prefix}')
 var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 4)
 
 // Virtual network and network security group
-module nsg 'modules/nsg.bicep' = { 
+module nsg 'modules/nsg.bicep' = {
   name: 'nsg-${name}-${uniqueSuffix}-deployment'
   params: {
     location: location
-    tags: tags 
+    tags: tags
     nsgName: 'nsg-${name}-${uniqueSuffix}'
   }
 }
 
-module vnet 'modules/vnet.bicep' = { 
+module vnet 'modules/vnet.bicep' = {
   name: 'vnet-${name}-${uniqueSuffix}-deployment'
   params: {
     location: location
@@ -156,28 +156,28 @@ module azuremlWorkspace 'modules/machinelearning.bicep' = {
 }
 
 // Optional VM and Bastion jumphost to help access the network isolated environment
-module dsvm 'modules/dsvmjumpbox.bicep' = if (deployJumphost) {
-  name: 'vm-${name}-${uniqueSuffix}-deployment'
-  params: {
-    location: location
-    virtualMachineName: 'vm-${name}-${uniqueSuffix}'
-    subnetId: '${vnet.outputs.id}/subnets/snet-training'
-    adminUsername: dsvmJumpboxUsername
-    adminPassword: dsvmJumpboxPassword
-    networkSecurityGroupId: nsg.outputs.networkSecurityGroup
-    vmSizeParameter: amlComputeDefaultVmSize
-  }
-}
+// module dsvm 'modules/dsvmjumpbox.bicep' = if (deployJumphost) {
+//   name: 'vm-${name}-${uniqueSuffix}-deployment'
+//   params: {
+//     location: location
+//     virtualMachineName: 'vm-${name}-${uniqueSuffix}'
+//     subnetId: '${vnet.outputs.id}/subnets/snet-training'
+//     adminUsername: dsvmJumpboxUsername
+//     adminPassword: dsvmJumpboxPassword
+//     networkSecurityGroupId: nsg.outputs.networkSecurityGroup
+//     vmSizeParameter: amlComputeDefaultVmSize
+//   }
+// }
 
-module bastion 'modules/bastion.bicep' = if (deployJumphost) {
-  name: 'bas-${name}-${uniqueSuffix}-deployment'
-  params: {
-    bastionHostName: 'bas-${name}-${uniqueSuffix}'
-    location: location
-    vnetName: vnet.outputs.name
-    addressPrefix: azureBastionSubnetPrefix
-  }
-  dependsOn: [
-    vnet
-  ]
-}
+// module bastion 'modules/bastion.bicep' = if (deployJumphost) {
+//   name: 'bas-${name}-${uniqueSuffix}-deployment'
+//   params: {
+//     bastionHostName: 'bas-${name}-${uniqueSuffix}'
+//     location: location
+//     vnetName: vnet.outputs.name
+//     addressPrefix: azureBastionSubnetPrefix
+//   }
+//   dependsOn: [
+//     vnet
+//   ]
+// }
